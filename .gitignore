@@ -1,0 +1,47 @@
+# Python
+.venv/
+.venv313/
+venv/
+env/
+__pycache__/
+*.pyc
+
+# Python environment / IDE
+.vscode/
+.idea/
+.ipynb_checkpoints/
+
+# Backend generated files
+backend/uploads/
+backend/ecosort.db
+backend/*.db
+*.sqlite
+*.sqlite3
+*.log
+
+# AI model weights
+*.pt
+*.pth
+*.onnx
+
+# Node / React
+node_modules/
+frontend/node_modules/
+dist/
+build/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# =========================
+# EcoSort AI datasets
+# =========================
+datasets/
+# Training runs
+runs/

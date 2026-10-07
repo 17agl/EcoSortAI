@@ -12,7 +12,7 @@
 * 📈 **Dashboard** — Shows scan statistics, recent activity, and recycling information.
 * 📱 **Responsive Interface** — Designed for desktop and mobile usage.
 * 🧠 **Trained AI Model** — Uses a custom-trained object detection model for waste classification.
-
+More features will be added soon. 
 ## 🗂️ Waste Categories
 
 The current model supports:

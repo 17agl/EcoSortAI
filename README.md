@@ -223,4 +223,4 @@ EcoSort AI is an active development project. The current version includes the Re
 
 Built using **React + FastAPI + YOLO + SQLite**.
 
-More updation in future.
+## More updation in future.

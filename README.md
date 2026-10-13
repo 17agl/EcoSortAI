@@ -222,3 +222,5 @@ EcoSort AI is an active development project. The current version includes the Re
 **EcoSort AI — AI-Powered Smart Recycling Assistant**
 
 Built using **React + FastAPI + YOLO + SQLite**.
+
+More updation in future.

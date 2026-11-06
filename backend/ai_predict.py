@@ -1,27 +1,11 @@
 """
-EcoSort AI - Backend AI Integration
-======================================
-Bridge module that the FastAPI backend (main.py) imports
-when MOCK_AI_ENABLED = False.
-
-It calls the YOLO model via ai/object_detection/predict.py
-and applies the same RECYCLING_RULES logic used in mock mode
-so the API response format stays 100% identical.
-
-Usage in main.py
-----------------
-    from ai_predict import run_ai_predict
-
-    # inside the /predict route, after MOCK_AI block:
-    detections_raw = run_ai_predict(file_path)
+EcoSort AI — Backend AI Integration Bridge
+==========================================
+Calls predict.py and annotates each detection with full recycling metadata.
 """
 
 import sys
 from pathlib import Path
-
-# ---------------------------------------------------------------------------
-# Make sure the ai/ package is importable from backend/
-# ---------------------------------------------------------------------------
 
 _AI_DIR = Path(__file__).resolve().parents[1] / "ai" / "object_detection"
 if str(_AI_DIR) not in sys.path:
@@ -31,133 +15,98 @@ from predict import predict as yolo_predict   # noqa: E402
 
 
 # ============================================================
-# RECYCLING RULES  (mirrors backend/main.py RECYCLING_RULES)
+# FULL RECYCLING RULES  (all 10 classes)
 # ============================================================
 
 RECYCLING_RULES = {
 
     "plastic": {
-        "action": "RECYCLE",
-        "instruction":
-            "Clean and dry the plastic item, "
-            "then place it in the recyclable-plastic collection.",
-        "reason":
-            "Clean plastic containers can often be "
-            "recycled when accepted by the local recycling system.",
-        "recyclable": True,
-        "reusable": False,
+        "action"       : "RECYCLE",
+        "instruction"  : "Clean and dry the plastic item, then place it in the recyclable-plastic collection. Check the recycling number (♳–♷) if visible.",
+        "reason"       : "Clean plastic containers can often be recycled. Recycling 1 tonne of plastic saves 5,774 kWh of energy.",
+        "recyclable"   : True,
+        "reusable"     : False,
         "decompose_time": "20–500 years (landfill)",
     },
 
     "glass": {
-        "action": "RECYCLE",
-        "instruction":
-            "Empty and rinse the glass item, "
-            "then place it in the glass recycling stream.",
-        "reason":
-            "Glass is 100% recyclable indefinitely without loss of quality.",
-        "recyclable": True,
-        "reusable": True,
+        "action"       : "RECYCLE",
+        "instruction"  : "Empty and rinse the glass item. Separate by colour if required (clear, green, brown). Place in glass bank or kerbside glass bin.",
+        "reason"       : "Glass is 100% recyclable indefinitely without quality loss. Saves 315 kg of CO₂ per tonne recycled.",
+        "recyclable"   : True,
+        "reusable"     : True,
         "decompose_time": "1 million+ years (landfill)",
     },
 
     "metal": {
-        "action": "RECYCLE",
-        "instruction":
-            "Empty and rinse the metal item, "
-            "then place it with recyclable metals.",
-        "reason":
-            "Metal is infinitely recyclable and saves up to 95% energy "
-            "compared to virgin production.",
-        "recyclable": True,
-        "reusable": False,
+        "action"       : "RECYCLE",
+        "instruction"  : "Empty and rinse the metal item. Aluminium cans, steel tins, and scrap metal are all accepted in metal recycling bins.",
+        "reason"       : "Metal is infinitely recyclable. Recycling aluminium saves 95% of the energy needed to produce new aluminium.",
+        "recyclable"   : True,
+        "reusable"     : False,
         "decompose_time": "50–200 years (landfill)",
     },
 
     "paper_cardboard": {
-        "action": "RECYCLE",
-        "instruction":
-            "Keep the paper or cardboard dry and clean, "
-            "flatten it if possible, and place it with paper recycling.",
-        "reason":
-            "Clean and dry paper or cardboard is commonly recyclable.",
-        "recyclable": True,
-        "reusable": False,
-        "decompose_time": "2–6 weeks (composted) / months (landfill)",
+        "action"       : "RECYCLE",
+        "instruction"  : "Keep paper/cardboard dry and clean. Flatten boxes to save space. Remove tape and staples if possible.",
+        "reason"       : "Recycling 1 tonne of cardboard saves 17 trees and 26,000 litres of water.",
+        "recyclable"   : True,
+        "reusable"     : False,
+        "decompose_time": "2–6 weeks (compost) / 2–5 months (landfill)",
     },
 
     "food_container": {
-        "action": "COMPOST OR LANDFILL",
-        "instruction":
-            "Empty and rinse the container. If made from compostable "
-            "material, compost it; otherwise dispose of it in general waste.",
-        "reason":
-            "Food-soiled containers are usually not accepted for recycling "
-            "because contamination degrades the recycled material.",
-        "recyclable": False,
-        "reusable": False,
+        "action"       : "COMPOST OR LANDFILL",
+        "instruction"  : "Rinse container. Compostable materials go to green bin. Heavily soiled non-compostable containers go to general waste.",
+        "reason"       : "Food-soiled containers cannot be recycled — contamination degrades paper fibres and plastic batches.",
+        "recyclable"   : False,
+        "reusable"     : False,
         "decompose_time": "5–50 years depending on material",
     },
 
     "battery": {
-        "action": "HAZARDOUS WASTE",
-        "instruction":
-            "Do NOT put batteries in household recycling or general waste. "
-            "Take them to a designated battery-collection point.",
-        "reason":
-            "Batteries contain toxic heavy metals that contaminate soil and "
-            "water when landfilled, and can cause fires in recycling trucks.",
-        "recyclable": True,
-        "reusable": False,
+        "action"       : "HAZARDOUS WASTE — BATTERY DROP-OFF",
+        "instruction"  : "Do NOT put batteries in household recycling or general waste. Take to a designated battery-collection point (supermarkets, electronics stores).",
+        "reason"       : "Batteries contain lead, cadmium, and lithium — toxic to soil and water, and a fire risk in recycling trucks.",
+        "recyclable"   : True,
+        "reusable"     : False,
         "decompose_time": "100+ years (toxic leaching)",
     },
 
     "electronics": {
-        "action": "E-WASTE RECYCLING",
-        "instruction":
-            "Take the item to an authorised e-waste recycling centre "
-            "or manufacturer take-back programme.",
-        "reason":
-            "Electronics contain valuable metals and toxic substances "
-            "that must be recovered or contained safely.",
-        "recyclable": True,
-        "reusable": True,
+        "action"       : "E-WASTE RECYCLING",
+        "instruction"  : "Take to an authorised e-waste recycling centre or manufacturer take-back programme. Never bin screens, phones, or cables.",
+        "reason"       : "Electronics contain gold, silver, copper, and toxic substances that must be recovered or safely contained.",
+        "recyclable"   : True,
+        "reusable"     : True,
         "decompose_time": "Centuries (toxic leaching)",
     },
 
     "organic_waste": {
-        "action": "ORGANIC COMPOST",
-        "instruction":
-            "Place in green organic waste bin or backyard compost pit. "
-            "Keeps biodegradable food scraps out of methane-producing landfills.",
-        "reason":
-            "Organic food waste decomposes into nutrient-rich soil fertilizer when composted.",
-        "recyclable": True,
-        "reusable": True,
+        "action"       : "ORGANIC COMPOST",
+        "instruction"  : "Place in green organic waste bin or home compost pit. Avoid adding meat and dairy to home compost.",
+        "reason"       : "Composting organic waste produces nutrient-rich fertiliser and reduces methane from landfill decomposition.",
+        "recyclable"   : True,
+        "reusable"     : True,
         "decompose_time": "1–4 months (composted)",
     },
 
     "hazardous_waste": {
-        "action": "SPECIAL HAZARDOUS DISPOSAL",
-        "instruction":
-            "Hand over to municipal chemical waste depot. "
-            "Do NOT dump in regular trash or drain.",
-        "reason":
-            "Contains toxic compounds requiring specialized chemical containment.",
-        "recyclable": False,
-        "reusable": False,
+        "action"       : "HAZARDOUS WASTE — SPECIAL DISPOSAL",
+        "instruction"  : "Hand over to municipal chemical waste depot. Do NOT pour down the drain or mix with general waste.",
+        "reason"       : "Hazardous materials (paints, solvents, medicines) require specialised containment to prevent soil and water contamination.",
+        "recyclable"   : False,
+        "reusable"     : False,
         "decompose_time": "Centuries (toxic threat)",
     },
 
     "unknown": {
-        "action": "GENERAL WASTE",
-        "instruction":
-            "The item could not be confidently identified. "
-            "Dispose of it in general waste.",
-        "reason":
-            "Unable to determine the material type from the image.",
-        "recyclable": False,
-        "reusable": False,
+        "action"       : "GENERAL WASTE",
+        "instruction"  : "The item could not be confidently identified. Place in general waste or consult your local waste authority.",
+        "reason"       : "Unable to determine material type. When in doubt, general waste prevents recycling contamination.",
+        "recyclable"   : False,
+        "reusable"     : False,
         "decompose_time": "Unknown",
     },
 }
@@ -169,30 +118,36 @@ RECYCLING_RULES = {
 
 def run_ai_predict(image_path) -> list:
     """
-    Run real YOLO inference, multi-object detection, and image preprocessing.
+    Run YOLO inference, map each detection to recycling rules,
+    and return the full enriched detection list.
     """
     raw = yolo_predict(image_path)
 
     formatted = []
 
     for det in raw:
-        class_name = det["class_name"]
+        class_name = det.get("class_name", "unknown")
         rule       = RECYCLING_RULES.get(class_name, RECYCLING_RULES["unknown"])
 
         formatted.append({
+            # Detection fields
             "class_name"    : class_name,
-            "confidence"    : det["confidence"],
+            "confidence"    : det["confidence"],           # REAL value — no inflation
+            "raw_confidence": det.get("raw_confidence", det["confidence"]),
+            "bbox"          : det.get("bbox", [50.0, 50.0, 590.0, 590.0]),
+            "img_dimensions": det.get("img_dimensions", [640, 640]),
+            "contamination" : det.get("contamination", {
+                "status": "Clean & Dry ✨", "level": "Clean",
+                "instruction": "Item approved for recycling!", "is_clean": True,
+            }),
+
+            # Recycling rule fields
             "action"        : rule["action"],
             "instruction"   : rule["instruction"],
             "reason"        : rule["reason"],
             "recyclable"    : rule["recyclable"],
             "reusable"      : rule["reusable"],
             "decompose_time": rule["decompose_time"],
-            "bbox"          : det.get("bbox", [50.0, 50.0, 590.0, 590.0]),
-            "img_dimensions": det.get("img_dimensions", [640, 640]),
-            "contamination" : det.get("contamination", {
-                "status": "Clean & Dry ✨", "level": "Clean", "instruction": "Item approved for recycling!", "is_clean": True
-            }),
         })
 
     return formatted

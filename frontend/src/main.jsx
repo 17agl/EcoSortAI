@@ -6,6 +6,7 @@ import App from "./App";
 import "./index.css";
 import "./mobile.css";
 import "./roadmap.css";
+import "./result-cards.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

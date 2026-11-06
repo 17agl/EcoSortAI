@@ -1,0 +1,314 @@
+/* =============================================================
+   RESULT PAGE — OBJECT ACTION CARDS + SUMMARY TABLE
+   ============================================================= */
+
+/* ── Cards column ─────────────────────────────────────────── */
+.oac-cards-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ── Individual object action card ───────────────────────── */
+.obj-action-card {
+  background: #ffffff;
+  border: 1px solid #e5ebe6;
+  border-radius: 14px;
+  padding: 16px;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+  user-select: none;
+}
+
+.obj-action-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.09);
+  transform: translateY(-1px);
+}
+
+.obj-action-card--active {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Card header ──────────────────────────────────────────── */
+.oac-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.oac-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.oac-title-block {
+  flex: 1;
+  min-width: 0;
+}
+
+.oac-num {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.oac-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #18352a;
+  margin: 0 0 3px;
+  line-height: 1.2;
+}
+
+.oac-subtypes {
+  font-size: 11px;
+  color: #9aa8a0;
+  display: block;
+}
+
+.oac-conf-block {
+  flex-shrink: 0;
+}
+
+.oac-conf-badge {
+  border-radius: 10px;
+  padding: 6px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 56px;
+}
+
+.oac-conf-pct {
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.oac-conf-lbl {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  margin-top: 2px;
+}
+
+/* ── Confidence bar ───────────────────────────────────────── */
+.oac-conf-bar-wrap {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.oac-conf-bar-track {
+  flex: 1;
+  height: 6px;
+  background: #e8eee9;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.oac-conf-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
+.oac-conf-bar-label {
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ── Contamination ────────────────────────────────────────── */
+.oac-contam {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid;
+  font-size: 13px;
+}
+
+.oac-contam strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.oac-contam p {
+  color: #5a7568;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Lifecycle badges ─────────────────────────────────────── */
+.oac-badges {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.oac-badge {
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.oac-badge span {
+  font-size: 11px;
+  color: #7a8f82;
+}
+
+.oac-badge strong {
+  font-size: 13px;
+}
+
+/* ── Action / instruction boxes ───────────────────────────── */
+.oac-action-box {
+  margin-top: 12px;
+  padding: 13px 14px;
+  border-radius: 10px;
+  border: 1px solid;
+  font-size: 13px;
+}
+
+.oac-action-box strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.oac-action-box p {
+  margin: 0;
+  color: #3a5244;
+  line-height: 1.5;
+}
+
+.oac-instruction-box {
+  margin-top: 10px;
+  padding: 13px 14px;
+  border-radius: 10px;
+  background: #f5f8f5;
+  font-size: 13px;
+}
+
+.oac-instruction-box strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: #3a5244;
+}
+
+.oac-instruction-box p {
+  margin: 0;
+  color: #5a7568;
+  line-height: 1.55;
+}
+
+/* ── Per-object action buttons ────────────────────────────── */
+.oac-action-buttons {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.oac-btn {
+  padding: 9px 14px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+  border: 2px solid transparent;
+}
+
+.oac-btn:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+.oac-btn--primary {
+  color: #ffffff;
+}
+
+.oac-btn--outline {
+  background: transparent;
+}
+
+/* ── Detection summary table ──────────────────────────────── */
+.oac-summary-table {
+  margin-top: 16px;
+  border: 1px solid #e5ebe6;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.oac-summary-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.oac-summary-table th {
+  background: #f5f8f5;
+  color: #5a7568;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #e5ebe6;
+}
+
+.oac-summary-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f0f4f0;
+  vertical-align: middle;
+}
+
+.oac-summary-table tr:last-child td {
+  border-bottom: none;
+}
+
+.oac-summary-table tr:hover td {
+  background: #f8fbf8;
+}
+
+/* ── Mobile adjustments ───────────────────────────────────── */
+@media (max-width: 480px) {
+  .oac-badges {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .oac-action-buttons {
+    flex-direction: column;
+  }
+
+  .oac-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

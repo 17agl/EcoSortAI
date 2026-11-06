@@ -1,14 +1,21 @@
 import { useNavigate } from "react-router-dom";
+import { getStoredUser, logout } from "../App";
 
 function Navbar() {
   const navigate = useNavigate();
+  const user = getStoredUser();
 
-  const user = JSON.parse(
-    localStorage.getItem("ecosort_user")
-  );
+  const initials = user?.name
+    ? user.name
+        .split(" ")
+        .map((w) => w[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2)
+    : "?";
 
   const handleLogout = () => {
-    localStorage.removeItem("ecosort_user");
+    logout();
     navigate("/login");
   };
 
@@ -16,23 +23,33 @@ function Navbar() {
     <nav className="navbar">
 
       <div className="navbar-left">
+        <span className="navbar-logo-icon">♻️</span>
         <h2>EcoSort AI</h2>
       </div>
 
       <div className="navbar-right">
 
         {user && (
-          <span className="navbar-user">
-            {user.name}
-          </span>
-        )}
+          <>
+            {/* Avatar – always visible */}
+            <div className="user-avatar" title={user.name}>
+              {initials}
+            </div>
 
-        <button
-          className="logout-button"
-          onClick={handleLogout}
-        >
-          Logout
-        </button>
+            {/* Name – hidden on mobile */}
+            <span className="navbar-user navbar-user-name">
+              {user.name}
+            </span>
+
+            {/* Logout – hidden on mobile (available via bottom nav More menu) */}
+            <button
+              className="logout-button navbar-logout-desktop"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+          </>
+        )}
 
       </div>
 

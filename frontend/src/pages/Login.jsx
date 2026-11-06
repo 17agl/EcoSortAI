@@ -10,12 +10,14 @@ function Login() {
   const passwordRef = useRef(null);
 
   const [formData, setFormData] = useState({
-    email: "",
+    email:    "",
     password: "",
   });
 
-  const [error,   setError]   = useState("");
-  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe,   setRememberMe]   = useState(true);
+  const [error,        setError]        = useState("");
+  const [loading,      setLoading]      = useState(false);
 
   const handleChange = (event) => {
     setFormData((prev) => ({
@@ -29,7 +31,6 @@ function Login() {
     setError("");
 
     const email    = formData.email.trim().toLowerCase();
-    // Read directly from DOM — catches browser autofill that skips onChange
     const password = passwordRef.current?.value || formData.password;
 
     if (!email || !password) {
@@ -45,7 +46,7 @@ function Login() {
       const response = await fetch(
         `${API_BASE_URL}/login?${params.toString()}`,
         {
-          method: "POST",
+          method:  "POST",
           headers: { Accept: "application/json" },
         }
       );
@@ -56,7 +57,14 @@ function Login() {
         throw new Error(data.message || "Login failed.");
       }
 
-      localStorage.setItem("ecosort_user", JSON.stringify(data.user));
+      // Store user with session token (or plain user if backend doesn't support it yet)
+      const userPayload = JSON.stringify(data.user);
+      if (rememberMe) {
+        localStorage.setItem("ecosort_user", userPayload);
+      } else {
+        sessionStorage.setItem("ecosort_user", userPayload);
+      }
+
       navigate("/dashboard");
 
     } catch (err) {
@@ -67,25 +75,29 @@ function Login() {
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-card">
+    <div className="auth-page-mobile">
 
-        <div className="auth-header">
-          <h1>Welcome Back</h1>
-          <p>
-            Login to your EcoSort AI account
-          </p>
-        </div>
+      {/* Hero section */}
+      <div className="auth-hero">
+        <div className="auth-hero-icon">♻️</div>
+        <h1 className="auth-hero-title">EcoSort AI</h1>
+        <p className="auth-hero-subtitle">Smart waste. Cleaner planet.</p>
+      </div>
 
-        <form onSubmit={handleSubmit}>
+      {/* Card */}
+      <div className="auth-card-mobile">
+        <h2 className="auth-card-heading">Welcome back</h2>
+        <p className="auth-card-sub">Sign in to continue</p>
 
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
+        <form onSubmit={handleSubmit} className="auth-form-mobile">
+
+          <div className="auth-field">
+            <label htmlFor="email">Email address</label>
             <input
               id="email"
               name="email"
               type="email"
-              placeholder="Enter your email"
+              placeholder="you@example.com"
               value={formData.email}
               onChange={handleChange}
               autoComplete="email"
@@ -93,54 +105,75 @@ function Login() {
             />
           </div>
 
-          <div className="form-group">
+          <div className="auth-field">
             <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={handleChange}
-              onInput={handleChange}
-              ref={passwordRef}
-              autoComplete="current-password"
-              required
-            />
+            <div className="auth-password-wrap">
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Your password"
+                value={formData.password}
+                onChange={handleChange}
+                onInput={handleChange}
+                ref={passwordRef}
+                autoComplete="current-password"
+                required
+              />
+              <button
+                type="button"
+                className="auth-eye-btn"
+                onClick={() => setShowPassword((v) => !v)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? "🙈" : "👁️"}
+              </button>
+            </div>
+          </div>
+
+          <div className="auth-remember-row">
+            <label className="auth-remember-label">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
+              <span>Remember me</span>
+            </label>
           </div>
 
           {error && (
-            <p className="auth-error">
-              {error}
-            </p>
+            <div className="auth-error-box">
+              <span>⚠️</span>
+              <span>{error}</span>
+            </div>
           )}
 
           <button
             type="submit"
-            className="auth-button"
+            className="auth-submit-btn"
             disabled={loading}
           >
-            {loading
-              ? "Logging in..."
-              : "Login"}
+            {loading ? (
+              <span className="auth-btn-loading">
+                <span className="auth-spinner" />
+                Signing in...
+              </span>
+            ) : (
+              "Sign In"
+            )}
           </button>
 
         </form>
 
-        <div className="auth-footer">
-          <p>
-            Don't have an account?{" "}
-            <Link to="/register">
-              Create Account
-            </Link>
-          </p>
-
-          <Link to="/dashboard">
-            Back to Dashboard
+        <p className="auth-switch-text">
+          Don&#39;t have an account?{" "}
+          <Link to="/register" className="auth-switch-link">
+            Create Account
           </Link>
-        </div>
-
+        </p>
       </div>
+
     </div>
   );
 }

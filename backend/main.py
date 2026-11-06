@@ -1,5 +1,7 @@
-from pathlib import Path
+﻿from pathlib import Path
 import uuid
+import time
+import re
 
 from fastapi import FastAPI, File, UploadFile, Header
 from fastapi.middleware.cors import CORSMiddleware
@@ -202,6 +204,15 @@ def model_info():
     }
 
 # ============================================================
+# SESSION TOKEN HELPER
+# ============================================================
+
+def _generate_session_token():
+    token = str(uuid.uuid4())
+    expiry = int(time.time()) + (30 * 24 * 3600)  # 30 days
+    return token, expiry
+
+# ============================================================
 # REGISTER
 # ============================================================
 
@@ -236,12 +247,22 @@ def register(
         }
 
 
-    if len(password) < 6:
-
+    if len(password) < 8:
         return {
             "status": "error",
-            "message":
-                "Password must contain at least 6 characters."
+            "message": "Password must be at least 8 characters long."
+        }
+
+    if not re.search(r'[0-9]', password):
+        return {
+            "status": "error",
+            "message": "Password must contain at least one number."
+        }
+
+    if not re.search(r'[^A-Za-z0-9]', password):
+        return {
+            "status": "error",
+            "message": "Password must contain at least one special character."
         }
 
 
@@ -286,27 +307,18 @@ def register(
     )
 
 
+    session_token, token_expiry = _generate_session_token()
+
     return {
-
-        "status":
-            "success",
-
-        "message":
-            "Account created successfully.",
-
+        "status": "success",
+        "message": "Account created successfully.",
         "user": {
-
-            "id":
-                user_id,
-
-            "name":
-                name,
-
-            "email":
-                email,
-
-            "created_at":
-                created_at
+            "id": user_id,
+            "name": name,
+            "email": email,
+            "created_at": created_at,
+            "session_token": session_token,
+            "token_expiry": token_expiry
         }
     }
 
@@ -332,6 +344,8 @@ def login(email: str, password: str):
             "message": "Invalid email or password."
         }
 
+    session_token, token_expiry = _generate_session_token()
+
     return {
         "status": "success",
         "message": "Login successful.",
@@ -339,9 +353,22 @@ def login(email: str, password: str):
             "id": user["id"],
             "name": user["name"],
             "email": user["email"],
-            "created_at": user["created_at"]
+            "created_at": user["created_at"],
+            "session_token": session_token,
+            "token_expiry": token_expiry
         }
     }
+
+# ============================================================
+# VERIFY TOKEN
+# ============================================================
+
+@app.get("/verify-token")
+def verify_token(token: str):
+    # Simple presence and length check - in production use proper JWT
+    if not token or len(token) < 10:
+        return {"valid": False}
+    return {"valid": True}
 
 # ============================================================
 # PREDICT

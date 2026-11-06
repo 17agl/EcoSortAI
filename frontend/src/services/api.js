@@ -1,27 +1,42 @@
-const API_BASE_URL =
+﻿const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
   "http://127.0.0.1:8000";
 
+// ============================================================
+// AUTH HELPERS — dual-storage (localStorage = remember-me, sessionStorage = session-only)
+// ============================================================
+
+export const getStoredUser = () => {
+  const raw =
+    localStorage.getItem("ecosort_user") ||
+    sessionStorage.getItem("ecosort_user");
+  if (!raw) return null;
+  try {
+    const user = JSON.parse(raw);
+    if (user.token_expiry && Date.now() / 1000 > user.token_expiry) {
+      localStorage.removeItem("ecosort_user");
+      sessionStorage.removeItem("ecosort_user");
+      return null;
+    }
+    return user;
+  } catch {
+    return null;
+  }
+};
+
 // Helper to get authorization header
 const getUserHeader = () => {
-  const userData = localStorage.getItem("ecosort_user");
-  if (!userData) return {};
-  try {
-    const user = JSON.parse(userData);
-    return { "X-User-ID": String(user.id) };
-  } catch (e) {
-    return {};
-  }
+  const user = getStoredUser();
+  if (!user) return {};
+  return { "X-User-ID": String(user.id) };
 };
 
 // 1. SCAN WASTE
 export const scanWaste = async (imageFile) => {
-  const userData = localStorage.getItem("ecosort_user");
-  if (!userData) {
+  const user = getStoredUser();
+  if (!user) {
     throw new Error("Please login before scanning.");
   }
-
-  const user = JSON.parse(userData);
   const formData = new FormData();
   formData.append("file", imageFile);
 
@@ -43,12 +58,10 @@ export const scanWaste = async (imageFile) => {
 
 // 2. SCAN HISTORY
 export const getScanHistory = async () => {
-  const userData = localStorage.getItem("ecosort_user");
-  if (!userData) {
+  const user = getStoredUser();
+  if (!user) {
     throw new Error("Please login before viewing history.");
   }
-
-  const user = JSON.parse(userData);
 
   const response = await fetch(`${API_BASE_URL}/history`, {
     headers: {

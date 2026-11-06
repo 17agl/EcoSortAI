@@ -9,6 +9,7 @@ import Impact     from "./pages/Impact";
 import Chatbot    from "./pages/Chatbot";
 import Profile    from "./pages/Profile";
 import Settings   from "./pages/Settings";
+import Roadmap    from "./pages/Roadmap";
 
 import Login    from "./pages/Login";
 import Register from "./pages/Register";
@@ -101,6 +102,7 @@ function App() {
       <Route path="/history"   element={<ProtectedRoute><History /></ProtectedRoute>} />
       <Route path="/profile"   element={<ProtectedRoute><Profile /></ProtectedRoute>} />
       <Route path="/settings"  element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+      <Route path="/roadmap"   element={<ProtectedRoute><Roadmap /></ProtectedRoute>} />
 
     </Routes>
   );

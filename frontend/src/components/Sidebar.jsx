@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+﻿import { NavLink } from "react-router-dom";
 
 function Sidebar() {
   const menuItems = [
@@ -8,6 +8,7 @@ function Sidebar() {
     { name: "Environmental Impact", path: "/impact",    icon: "🌱" },
     { name: "AI Chatbot",           path: "/chatbot",   icon: "🤖" },
     { name: "History",              path: "/history",   icon: "🕘" },
+    { name: "Roadmap",              path: "/roadmap",   icon: "🛣️" },
   ];
 
   return (

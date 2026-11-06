@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 function BottomNav() {
@@ -82,40 +82,24 @@ function BottomNav() {
         <div className="bottom-sheet-title">More Options</div>
 
         <div className="bottom-sheet-items">
-          <NavLink
-            to="/impact"
-            className="bottom-sheet-item"
-            onClick={closeSheet}
-          >
-            <span>🌱</span>
-            <span>Environmental Impact</span>
+          <NavLink to="/impact"  className="bottom-sheet-item" onClick={closeSheet}>
+            <span>🌱</span><span>Environmental Impact</span>
           </NavLink>
 
-          <NavLink
-            to="/history"
-            className="bottom-sheet-item"
-            onClick={closeSheet}
-          >
-            <span>🕘</span>
-            <span>Scan History</span>
+          <NavLink to="/history" className="bottom-sheet-item" onClick={closeSheet}>
+            <span>🕘</span><span>Scan History</span>
           </NavLink>
 
-          <NavLink
-            to="/profile"
-            className="bottom-sheet-item"
-            onClick={closeSheet}
-          >
-            <span>👤</span>
-            <span>Profile</span>
+          <NavLink to="/roadmap" className="bottom-sheet-item" onClick={closeSheet}>
+            <span>🛣️</span><span>Roadmap</span>
           </NavLink>
 
-          <NavLink
-            to="/settings"
-            className="bottom-sheet-item"
-            onClick={closeSheet}
-          >
-            <span>⚙️</span>
-            <span>Settings</span>
+          <NavLink to="/profile" className="bottom-sheet-item" onClick={closeSheet}>
+            <span>👤</span><span>Profile</span>
+          </NavLink>
+
+          <NavLink to="/settings" className="bottom-sheet-item" onClick={closeSheet}>
+            <span>⚙️</span><span>Settings</span>
           </NavLink>
 
           <button
@@ -123,8 +107,7 @@ function BottomNav() {
             onClick={handleLogout}
             type="button"
           >
-            <span>🚪</span>
-            <span>Logout</span>
+            <span>🚪</span><span>Logout</span>
           </button>
         </div>
       </div>
